@@ -18,6 +18,7 @@ class Login extends Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(event) {
@@ -29,8 +30,13 @@ class Login extends Component {
         
     }
 
-    handleSubmit(event) {
-        console.log('cool')
+    async handleSubmit(event) {
+        try {
+            let response = await axios.post("http://localhost:3001/api/users/register", this.state.form)
+            alert(response.status)
+        } catch (err) {
+            alert(err)
+        }
     }
 
     render() {

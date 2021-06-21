@@ -9,7 +9,7 @@ class Navibar extends Component {
         return (
             <div>
                 <Navbar bg="dark" sticky="top">
-                    <Navbar.Brand href="home">
+                    <Navbar.Brand href="/">
                         <img
                              src={sjlogo}
                              width="40"

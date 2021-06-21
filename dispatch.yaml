@@ -1,0 +1,6 @@
+dispatch:
+  - url: "*/front/*"
+    service: frontend
+
+  - url: "*/back/*"
+    service: default
