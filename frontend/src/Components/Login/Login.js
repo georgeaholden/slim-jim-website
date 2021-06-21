@@ -30,7 +30,7 @@ class Login extends Component {
     }
 
     handleSubmit(event) {
-        a
+        console.log('cool')
     }
 
     render() {
