@@ -5,6 +5,14 @@ import sjlogo from './sjlogo.svg'
 
 
 class Navibar extends Component {
+    showLogin(location) {
+        return location !== "/login"
+    }
+
+    showRegister(location) {
+        return location === "/login"
+    }
+
     render() {
         return (
             <div>
@@ -19,7 +27,8 @@ class Navibar extends Component {
                         />
                     </Navbar.Brand>
                     <Navbar.Collapse className="justify-content-end">
-                        <Button variant="light" href="/login">Login</Button>
+                        {this.showLogin(window.location.pathname) && <Button variant="light" href="/login">Login</Button>}
+                        {this.showRegister(window.location.pathname) && <Button variant="light" href="/register">Create an Account</Button>}
                     </Navbar.Collapse>  
                 </Navbar>
             </div>

@@ -2,15 +2,17 @@ import { Component } from 'react';
 import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
+import './Register.css'
 import axios from 'axios';
 const passwords = require('../../passwords');
 
-class Login extends Component {
+class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
             form: {
-                loginInput: '',
+                username: '',
+                email: '',
                 password: ''
             },
             validated: false
@@ -20,44 +22,53 @@ class Login extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
+    async handleChange(event) {
         let form = this.state.form
         form[event.target.id] = event.target.value
-        this.setState({form: form})        
+        this.setState({form: form})     
     }
 
     async handleSubmit(event) {
         try {
             let form = this.state.form
             form["password"] = await passwords.hash(form.password)
-            localStorage.setItem("hash", form.password)
+            let registerResponse = await axios.post("http://localhost:3001/api/users/register", form)
+            localStorage.setItem("userId", registerResponse.data.userId)
+            let loginResponse = await axios.post("http://localhost:3001/api/users/register", {"loginInput": form.username, "password": form.password})
+            localStorage.setItem("AuthToken", loginResponse.data.token)
             this.props.history.push('/')
-            let response = await axios.post("http://localhost:3001/api/users/login", this.state.form)
-            alert(response.status)
+
         } catch (err) {
             alert(err)
         }
-    }
-
-    async test(event) {
-        this.props.history.push('/)')
     }
 
     render() {
         return (
             <div className="login">
                 <Card style={{width: '50rem', border: 'solid'}}>
-                <Form validated={this.state.validated} onSubmit={this.test} style={{paddingBottom: '20px'}}>
+                <Form validated={this.state.validated} onSubmit={this.handleSubmit} style={{paddingBottom: '20px'}}>
                     <Form.Group controlId="username" style={{paddingRight: '50px', paddingLeft: '50px', paddingTop: '20px'}} onChange={this.handleChange} name='test'>
-                        <Form.Label>Username or Email Address</Form.Label>
-                        <Form.Control placeholder="Username/Email" required minLength="3" />
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control placeholder="Username" required minLength="3" />
+                        <Form.Text className="text-muted">
+                            What others will see you as
+                        </Form.Text>
+                    </Form.Group>
+
+                    <Form.Group controlId="email" style={{paddingRight: '50px', paddingLeft: '50px'}} onChange={this.handleChange}>
+                        <Form.Label>Email address</Form.Label>
+                    <Form.Control type="email" placeholder="Email" />
                     </Form.Group>
 
                     <Form.Group controlId="password" style={{paddingRight: '50px', paddingLeft: '50px'}} onChange={this.handleChange}>
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" required minLength="3"/>
+                        <Form.Text className="text-muted"> 
+                            Please use a password you don't use anywhere else, security is questionable at best
+                        </Form.Text>
                     </Form.Group>
-                    <Button variant="dark" type="submit" style={{width: "150px"}}>Login</Button>
+                    <Button variant="primary" type="submit">Become a Jim</Button>
                 </Form>
                 </Card>
             </div>
@@ -65,4 +76,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default Register;

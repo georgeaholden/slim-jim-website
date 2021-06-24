@@ -6,7 +6,9 @@ import {
 import HomePage from './Components/HomePage/HomePage.js' ;
 import Navibar from './Components/Navbar';
 import NoMatch from "./Components/NoMatch";
-import Login from './Components/Login/Login.js';
+import Register from './Components/Register/Register';
+import Login from "./Components/Login/Login";
+
 
 export default function App() {
   return (
@@ -16,6 +18,7 @@ export default function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route exact path="/" component={HomePage} />
+          <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <Route component={NoMatch} />
         </Switch>

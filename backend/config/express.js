@@ -17,7 +17,6 @@ module.exports = function () {
     });
 
     //ROUTES
-    console.log("trying to call")
     require('../app/routes/users.routes')(app);
 
     return app
