@@ -1,65 +1,37 @@
 const db = require('../../config/db');
-const passwords = require('../services/passwords');
+const passwords = require('../services/passwords'); // Should implement the double hashing thing for security
 const randtoken = require('rand-token');
-const EmailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const formats = require('../services/formatting');
 
 exports.create = async function (user) {
-    const sql = 'INSERT INTO `User` (username, password, email) VALUES (?, ?, ?)';
-    const userData = [user.username, await passwords.hash(user.password), user.email];
-    console.log(userData)
-
-    try {
-        const result = await db.getPool().query(sql, userData);
-        console.log(result);
-        return result[0].insertId;
-    } catch (err) {
-        console.log(err);
-        throw err;
+    entry = {
+        email: user.email,
+        password: user.password,
     }
+    await db.collection('users').doc(user.username).set(entry);
 }
 
-exports.login = async function (userId) {
-    const sql = 'UPDATE `User` SET `auth_token` = ? WHERE `id` = ?';
+exports.login = async function (username) {
     const token = randtoken.generate(32);
-
-    try {
-        await db.getPool().query(sql, [token, userId]);
-        return {"userId": userId, "token": token}
-    } catch (err) {
-        console.log(err);
-        throw err;
-    }
+    await db.collection('users').doc(username).update(
+        {authToken: token})
+    return {"username": username, "token": token};
 }
 
-exports.findByLoginInput = async function (input) {
-    if (EmailRegex.test(input)) {
-        return await this.findByEmail(input)
+exports.findByUsername = async function (username, formatFunction=formats.userSensitive) {
+    const doc = await db.collection('users').doc(username).get();
+    if (doc.exists) {
+        return formatFunction(doc);
     } else {
-        return await this.findByUsername(input)
+        return null;
     }
 }
 
-
-exports.findByUsername = async function (username) {
-    const sql = 'SELECT * FROM `User` WHERE `username` = ?';
-    
-    try {
-        result = await db.getPool().query(sql, username)
-        return result[0][0]
-    } catch (err) {
-        console.log(err);
-        throw err;
+exports.findByEmail = async function (email, formatFunction=formats.userSensitive) {
+    const snapshot = await db.collection('users').where('email', '==', email).get();
+    if (!snapshot.empty) {
+        return formatFunction(snapshot.docs[0]);
+    } else {
+        return null;
     }
-}
-
-exports.findByEmail = async function (email) {
-    const sql = 'SELECT * FROM `User` WHERE `email` = ?';
-    
-    try {
-        result = await db.getPool().query(sql, email)
-        return result[0][0]
-    } catch (err) {
-        console.log(err);
-        throw err;
-    }
-}
+}  

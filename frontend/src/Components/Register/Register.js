@@ -33,13 +33,13 @@ class Register extends Component {
             let form = this.state.form
             form["password"] = await passwords.hash(form.password)
             let registerResponse = await axios.post("http://localhost:3001/api/users/register", form)
-            localStorage.setItem("userId", registerResponse.data.userId)
-            let loginResponse = await axios.post("http://localhost:3001/api/users/register", {"loginInput": form.username, "password": form.password})
+            let loginResponse = await axios.post("http://localhost:3001/api/users/login", {"loginInput": form.username, "password": form.password})
             localStorage.setItem("AuthToken", loginResponse.data.token)
+            localStorage.setItem("userId", loginResponse.data.userId)
             this.props.history.push('/')
-
         } catch (err) {
-            alert(err)
+            console.log(err)
+            alert('hold')
         }
     }
 
@@ -47,7 +47,7 @@ class Register extends Component {
         return (
             <div className="login">
                 <Card style={{width: '50rem', border: 'solid'}}>
-                <Form validated={this.state.validated} onSubmit={this.handleSubmit} style={{paddingBottom: '20px'}}>
+                <Form style={{paddingBottom: '20px'}}>
                     <Form.Group controlId="username" style={{paddingRight: '50px', paddingLeft: '50px', paddingTop: '20px'}} onChange={this.handleChange} name='test'>
                         <Form.Label>Username</Form.Label>
                         <Form.Control placeholder="Username" required minLength="3" />
@@ -68,7 +68,7 @@ class Register extends Component {
                             Please use a password you don't use anywhere else, security is questionable at best
                         </Form.Text>
                     </Form.Group>
-                    <Button variant="primary" type="submit">Become a Jim</Button>
+                    <Button variant="primary" onClick={this.handleSubmit}>Become a Jim</Button>
                 </Form>
                 </Card>
             </div>

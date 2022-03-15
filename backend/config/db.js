@@ -1,32 +1,10 @@
-const mysql = require('mysql2/promise');
+const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
+const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 
-let pool = null;
+const serviceAccount = require('../service-account-key.json');
 
-exports.createPool = async function () {
-    pool = mysql.createPool({
-        multipleStatements: true,
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE
-    });
-};
+initializeApp({
+    credential: cert(serviceAccount)
+  });
 
-exports.getPool = function () {
-    return pool;
-};
-
-exports.transaction = async function (pool, callback) {
-    const connection = await pool.getConnection();
-    await connection.beginTransaction();
-
-    try {
-        await callback(connection);
-        await connection.commit();
-    } catch (err) {
-        await connection.rollback();
-        throw err;
-    } finally {
-        connection.release();
-    }
-};
+module.exports = db = getFirestore();

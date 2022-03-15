@@ -9,7 +9,7 @@ module.exports = function () {
     // MIDDLEWARE
     app.use(allowCrossOriginRequestsMiddleware);
     app.use(bodyParser.json());
-    app.use(bodyParser.raw({ type: 'text/plain' }));  // for the /executeSql endpoint
+    app.use(bodyParser.raw({ type: 'text/plain' }));
     app.use(bodyParser.raw({ type: 'image/*', limit: '5mb'}));
 
     app.get('/api', function (req, res) {
