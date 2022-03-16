@@ -2,32 +2,68 @@ import { Component } from 'react';
 import Card from 'react-bootstrap/Card'
 import './Profile.css'
 import axios from 'axios';
+import dog from "./test.png"
 
 class Profile extends Component {
     constructor(props) {
         super(props);
-        console.log(this.props)
         this.state = {
-            user: {}
+            user: {
+                username: '',
+                email: '',
+                bio: ''
+            }
         }
     }
 
-    async getUser(id) {
-        this.setState({user: {username: 'john'}})
+    async getUser(targetUser) { 
+        let currentUser = localStorage.getItem("username")
+        let authToken = localStorage.getItem("authToken")
+        if (!currentUser || !authToken) {
+            this.props.history.push('/login');
+        }
+        let config = {
+            headers: {"username": currentUser, "X-Authorization": authToken}
+        }
+        try {
+            let response;
+            if (targetUser === currentUser) {
+                response = await axios.get("http://localhost:3001/api/users/private/" + targetUser, config);
+            } else {
+                response = await axios.get("http://localhost:3001/api/users/" + targetUser, config);
+            }
+            this.setState({user: response.data});
+            console.log(this.state.user)
+        } catch (err) {
+            if (err.response.status === 404) {
+                this.props.history.push('/404')
+                console.log('404')
+            }
+            console.log(err.response)
+        }
     }
 
     render() {
         return (
-            <div className="profile">
-                <Card style={{width: '50rem', border: 'solid'}}>
-                    <h1>{this.state.user.username}</h1>
-                </Card>
+            <div>
+                <div className="dog">
+                    <Card style={{width: '10rem'}}>
+                        <Card.Img variant="top" src={dog}/>
+                        <Card.Title className='title'>{this.state.user.username}</Card.Title>
+                        <Card.Text className='title'>{this.state.user.email}</Card.Text>
+                    </Card>
+                </div>
+                <div className="profile">
+                    <Card style={{width: '50rem', border: 'solid'}}>
+                        <h2>{this.state.user.bio}</h2>
+                    </Card>
+                </div>
             </div>
         )
     }
 
-    async componentDidMount() {
-        await this.getUser(10)
+    componentDidMount() {
+        this.getUser(this.props.match.params.username)
     }
 }
 

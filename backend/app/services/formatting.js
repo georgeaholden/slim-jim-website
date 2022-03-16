@@ -2,7 +2,8 @@
 exports.userPublic = function(doc) {
     data = doc.data();
     return {
-        username: doc.id
+        username: doc.id,
+        bio: data.bio
     }
 }
 

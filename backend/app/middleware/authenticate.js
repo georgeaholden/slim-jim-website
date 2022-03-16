@@ -4,7 +4,9 @@ const { validationResult } = require('express-validator');
 
 exports.loginRequired = async function (req, res, next) {
     const errors = validationResult(req);
+    console.log(req.header('X-Authorization'))
     if (!errors.isEmpty()) {
+        console.log(errors.array())
         return res.status(400).json({ errors: errors.array() });
     }
 

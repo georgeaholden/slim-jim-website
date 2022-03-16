@@ -32,14 +32,14 @@ class Register extends Component {
         try {
             let form = this.state.form
             form["password"] = await passwords.hash(form.password)
-            let registerResponse = await axios.post("http://localhost:3001/api/users/register", form)
-            let loginResponse = await axios.post("http://localhost:3001/api/users/login", {"loginInput": form.username, "password": form.password})
-            localStorage.setItem("AuthToken", loginResponse.data.token)
-            localStorage.setItem("userId", loginResponse.data.userId)
+            await axios.post("http://localhost:3001/api/users/register", form)
+            let loginResponse = await axios.post("http://localhost:3001/api/users/login", {"username": form.username, "password": form.password})
+            localStorage.setItem("authToken", loginResponse.data.token)
+            localStorage.setItem("username", loginResponse.data.username)
             this.props.history.push('/')
         } catch (err) {
             console.log(err)
-            alert('hold')
+            alert(err)
         }
     }
 
@@ -52,7 +52,7 @@ class Register extends Component {
                         <Form.Label>Username</Form.Label>
                         <Form.Control placeholder="Username" required minLength="3" />
                         <Form.Text className="text-muted">
-                            What others will see you as
+                            Used to login and as your display name (changeable later)
                         </Form.Text>
                     </Form.Group>
 
@@ -65,7 +65,7 @@ class Register extends Component {
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" placeholder="Password" required minLength="3"/>
                         <Form.Text className="text-muted"> 
-                            Please use a password you don't use anywhere else, security is questionable at best
+                            Maybe not your universal password, security is implemented but untested
                         </Form.Text>
                     </Form.Group>
                     <Button variant="primary" onClick={this.handleSubmit}>Become a Jim</Button>

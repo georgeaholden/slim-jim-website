@@ -12,5 +12,8 @@ module.exports = function(app) {
         .post(validate.userLoginValidators, users.login);
 
     app.route(baseUrl + '/:username')
-        .get(validate.loginRequiredValidators, authenticate.loginRequired, users.view);
+        .get(validate.loginRequiredValidators, authenticate.loginRequired, users.viewPublic);
+    
+    app.route(baseUrl + '/private/:username')
+        .get(validate.loginRequiredValidators, authenticate.loginRequired, validate.userViewValidators, users.viewPrivate);
 };

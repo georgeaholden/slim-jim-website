@@ -11,8 +11,11 @@ exports.userLoginValidators = [
     body('password').notEmpty().isHash('sha256')
 ]
 
+exports.userViewValidators = [
+    param('username').notEmpty().isAlphanumeric()
+]
+
 exports.loginRequiredValidators = [
     header('username').notEmpty().isAlphanumeric(),
-    header('X-Authorization').notEmpty().isAlphanumeric().isLength(32),
-    param('username').notEmpty().isAlphanumeric()
+    header('X-Authorization').notEmpty().isAlphanumeric().isLength(32)
 ]

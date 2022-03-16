@@ -28,18 +28,18 @@ paths:
             schema:
               type: object
               required:
-                - email
+                - username
                 - password
               properties:
-                email:
+                username:
                   type: string
-                  description: Email address of user account for login attempt
-                  example: johnsmith99@gmail.com
+                  description: Username of account for login attempt
+                  example: jog
                 password:
                   type: string
-                  format: password
-                  description: Plain text user password
-                  example: '1337-H%nt3r2'
+                  format: hash
+                  description: sha256 hash
+                  example: '008c70392e3abfbd0fa47bbc2ed96aa99bd49e159727fcba0f2e6abeb3a9d601'
       responses:
         '200':
           $ref: '#/components/responses/AuthenticatedResponse'
@@ -112,9 +112,9 @@ components:
       description: 'The requested route does exist (so not a 404) but some part of the request is not acceptable, for example trying to access a resource by an ID that does not exist.'
     AuthenticatedResponse:
       description: >
-        Response returned to client when they have performed an action to gain authentication (registering or logging in).
+        Response returned upon successful authentication.
         This response includes a session token that the client can use in future API requests to authenticate itself.
-        This session token is set as a cookie with name 'JSESSIONID', and will need to be included in subsequent requests to the server.
+        This session token is set as a cookie with name 'X-Authorization', and will need to be included in subsequent requests to the server.
       content:
         application/json:
           schema:

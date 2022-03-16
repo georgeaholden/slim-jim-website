@@ -6,7 +6,7 @@ import './HomePage.css'
 class HomePage extends Component {
     render() {
         return (
-            <div class="Picture">
+            <div className="Picture">
                 <Image src={rando}></Image>
             </div>            
         )
