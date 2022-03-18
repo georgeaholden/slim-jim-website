@@ -33,7 +33,7 @@ class Register extends Component {
             let form = this.state.form
             form["password"] = await passwords.hash(form.password)
             await axios.post(`${process.env.BACKEND_ADDR}/api/users/register`, form)
-            let loginResponse = await axios.post(`${process.env.BACKEND_ADDR}/api/users/login`, {"username": form.username, "password": form.password})
+            let loginResponse = await axios.post(`${process.env.REACT_APP_BACKEND_ADDR}/api/users/login`, {"username": form.username, "password": form.password})
             localStorage.setItem("authToken", loginResponse.data.token)
             localStorage.setItem("username", loginResponse.data.username)
             this.props.history.push('/')

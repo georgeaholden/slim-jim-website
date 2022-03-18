@@ -32,7 +32,7 @@ class Login extends Component {
                 username: this.state.form.username,
                 password: await passwords.hash(this.state.form.password)
             }
-            let response = await axios.post(`${process.env.BACKEND_ADDR}/api/users/login`, loginReq)
+            let response = await axios.post(`${process.env.REACT_APP_BACKEND_ADDR}/api/users/login`, loginReq)
             localStorage.setItem("authToken", response.data.token)
             localStorage.setItem("username", response.data.username)
             this.props.history.push('/')
