@@ -28,9 +28,9 @@ class Profile extends Component {
         try {
             let response;
             if (targetUser === currentUser) {
-                response = await axios.get("http://localhost:3001/api/users/private/" + targetUser, config);
+                response = await axios.get(`${process.env.BACKEND_ADDR}/api/users/private/${targetUser}`, config);
             } else {
-                response = await axios.get("http://localhost:3001/api/users/" + targetUser, config);
+                response = await axios.get(`${process.env.BACKEND_ADDR}/api/users/${targetUser}`, config);
             }
             this.setState({user: response.data});
             console.log(this.state.user)
