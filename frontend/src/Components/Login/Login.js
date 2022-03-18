@@ -27,6 +27,7 @@ class Login extends Component {
     }
 
     async handleSubmit(event) {
+        console.log(process.env.REACT_APP_BACKEND_ADDR);
         try {
             let loginReq = {
                 username: this.state.form.username,
