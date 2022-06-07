@@ -3,7 +3,11 @@ const db = require('./config/db');
 const express = require('./config/express');
 
 const app = express();
-const port = 8080;
+
+let port = process.env.PORT;
+if (Boolean(process.env.PROD)) {
+    port = 8080;
+}
 
 app.listen(port, function () {
     console.log(`Listening on port: ${port}`);
