@@ -1,6 +1,7 @@
 const express = require('express');
 const { allowCrossOriginRequestsMiddleware } = require('../app/middleware/cors.middleware');
 const bodyParser = require('body-parser');
+const path = require('node:path')
 
 module.exports = function () {
     const app = express();
@@ -18,6 +19,17 @@ module.exports = function () {
 
     //ROUTES
     require('../app/routes/users.routes')(app);
+
+    // In production version express app serves react frontend
+    app.use(express.static(path.resolve(__dirname, '../build')));
+
+    if (Boolean(process.env.PROD)) {
+        app.get('/*', function (req, res) {
+            res.sendFile(path.resolve(__dirname, '../build', 'index.html'))
+        })
+    }
+
+    console.log(path.join(__dirname, 'build', 'index.html'))
 
     return app
 };
