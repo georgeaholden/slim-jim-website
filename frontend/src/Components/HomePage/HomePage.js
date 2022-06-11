@@ -20,8 +20,9 @@ class HomePage extends Component {
         )
     }
 
-    componentDidMount() {
-        fetch('/api').then(response => response.json()).then(state => this.setState(state))
+    async componentDidMount() {
+        let response = await fetch('')
+        this.setState(await response.json());
     }
 }
 

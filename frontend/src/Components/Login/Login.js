@@ -27,16 +27,19 @@ class Login extends Component {
     }
 
     async handleSubmit(event) {
-        console.log(process.env.REACT_APP_BACKEND_ADDR);
         try {
             let loginReq = {
                 username: this.state.form.username,
                 password: await passwords.hash(this.state.form.password)
             }
-            let response = await axios.post(`${process.env.REACT_APP_BACKEND_ADDR}/api/users/login`, loginReq)
-            localStorage.setItem("authToken", response.data.token)
-            localStorage.setItem("username", response.data.username)
-            this.props.history.push('/')
+            // let response = await axios.post(`${process.env.REACT_APP_BACKEND_ADDR}/login`, loginReq)
+            // let response = await axios.post(`localhost:3000/api/login`, loginReq)
+            let response = await fetch('/api/users/login', {method: 'POST', body: loginReq})
+            let json = await response.json()
+            console.log(json)
+            // localStorage.setItem("authToken", json.data.token)
+            // localStorage.setItem("username", json.data.username)
+            // this.props.history.push('/')
         } catch (err) {
             console.log(err)
             alert(err)
