@@ -21,7 +21,7 @@ class HomePage extends Component {
     }
 
     async componentDidMount() {
-        let response = await fetch('')
+        let response = await fetch('/api')
         this.setState(await response.json());
     }
 }
