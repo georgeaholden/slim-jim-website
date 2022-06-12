@@ -4,6 +4,7 @@ const formats = require('../services/formatting');
 
 exports.create = async function(req, res) {
     console.log("Register user req");
+    console.log(req.body)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -15,8 +16,8 @@ exports.create = async function(req, res) {
         if (await Users.findByEmail(req.body.email)) {
             return res.status(409).send('Email already in use');
         }
-        const newId = await Users.create(req.body);
-        return res.status(201).send({newId});
+        await Users.create(req.body);
+        return res.sendStatus(201);
     } catch (err) {
         console.log(err);
         return res.status(500).send('Internal Server Error' + err);

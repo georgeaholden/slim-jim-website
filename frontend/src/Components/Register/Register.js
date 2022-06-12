@@ -3,7 +3,6 @@ import Form from 'react-bootstrap/Form'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import './Register.css'
-import axios from 'axios';
 const passwords = require('../../passwords');
 
 class Register extends Component {
@@ -28,15 +27,23 @@ class Register extends Component {
         this.setState({form: form})     
     }
 
+    // TODO
     async handleSubmit(event) {
         try {
             let form = this.state.form
             form["password"] = await passwords.hash(form.password)
-            await axios.post(`${process.env.BACKEND_ADDR}/api/users/register`, form)
-            let loginResponse = await axios.post(`${process.env.REACT_APP_BACKEND_ADDR}/api/users/login`, {"username": form.username, "password": form.password})
+            console.log(form)
+            let response = await fetch('/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(form)
+            })
+            console.log(await response.json())
             localStorage.setItem("authToken", loginResponse.data.token)
             localStorage.setItem("username", loginResponse.data.username)
-            this.props.history.push('/')
+            // this.props.history.push('/')
         } catch (err) {
             console.log(err)
             alert(err)
